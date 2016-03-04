@@ -2,6 +2,8 @@ FROM ubuntu:14.04
 
 MAINTAINER hico-horiuchi <12ff5b8@gmail.com>
 
+ENV VERSION 0.22.0-1
+
 RUN sed -i "s/archive\.ubuntu\.com/ftp\.jaist\.ac\.jp/g" /etc/apt/sources.list && \
     apt-get update && \
     apt-get -y upgrade && \
@@ -20,7 +22,7 @@ RUN apt-get -y install redis-server
 RUN wget -q http://repositories.sensuapp.org/apt/pubkey.gpg -O- | apt-key add - && \
     echo "deb     http://repositories.sensuapp.org/apt sensu main" | tee /etc/apt/sources.list.d/sensu.list && \
     apt-get update && \
-    apt-get -y install sensu=0.22.0-1 && \
+    apt-get -y install sensu=${VERSION} && \
     wget -O /etc/sensu/config.json http://sensuapp.org/docs/latest/files/config.json && \
     wget -O /etc/sensu/conf.d/default_handler.json http://sensuapp.org/docs/latest/files/default_handler.json && \
     wget -O /etc/sensu/conf.d/client.json http://sensuapp.org/docs/latest/files/client.json && \

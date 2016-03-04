@@ -5,20 +5,20 @@ machine:
   services:
     - docker
   environment:
-    tag: v0.22.0
+    version: v0.22.0
 dependencies:
   cache_directories:
     - '~/docker'
   pre:
-    - if [ -e ~/docker/hico/sensu:${tag}.tar ]; then docker load --input ~/docker/hico/sensu:${tag}.tar; fi
-    - docker build -t hico/sensu:${tag} .
+    - if [ -e ~/docker/hico/sensu:${version}.tar ]; then docker load --input ~/docker/hico/sensu:${version}.tar; fi
+    - docker build -t hico/sensu:${version} .
     - mkdir -p ~/docker/hico
-    - docker save hico/sensu:${tag} > ~/docker/hico/sensu:${tag}.tar
+    - docker save hico/sensu:${version} > ~/docker/hico/sensu:${version}.tar
   override:
     - go get github.com/mattn/gom
     - gom -test install
 test:
   override:
-    - docker run -d -p 4567:4567 hico/sensu:${tag}
+    - docker run -d -p 4567:4567 hico/sensu:${version}
     - sleep 20
     - gom test ./...
