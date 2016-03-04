@@ -6,7 +6,7 @@ fmt:
 	gom exec goimports -w sensu/*.go
 
 test:
-	gom test ./...
+	gom test -cover ./...
 
 link:
 	mkdir -p $(GOPATH)/src/github.com/hico-horiuchi

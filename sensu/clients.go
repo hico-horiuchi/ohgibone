@@ -83,7 +83,7 @@ func (api API) PostClients(name string, address string, subscriptions []string) 
 
 // Removes a client, resolving its current events.
 func (api API) DeleteClientsClient(name string) error {
-	response, err := api.delete("/client/" + name)
+	response, err := api.delete("/clients/" + name)
 	if err != nil {
 		return err
 	} else if response.StatusCode != 202 {

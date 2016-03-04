@@ -24,7 +24,7 @@ RUN wget -q http://repositories.sensuapp.org/apt/pubkey.gpg -O- | apt-key add - 
     wget -O /etc/sensu/config.json http://sensuapp.org/docs/latest/files/config.json && \
     wget -O /etc/sensu/conf.d/default_handler.json http://sensuapp.org/docs/latest/files/default_handler.json && \
     wget -O /etc/sensu/conf.d/client.json http://sensuapp.org/docs/latest/files/client.json && \
-    echo "{\n  \"checks\": {\n    \"default\": {\n      \"command\": \"/etc/sensu/plugins/default.sh\",\n      \"subscribers\": [\n        \"test\"\n      ],\n      \"interval\": 10,\n      \"handler\": \"default\",\n      \"aggregate\": true\n    }\n  }\n}" | tee /etc/sensu/conf.d/default_check.json && \
+    echo "{\n  \"checks\": {\n    \"default\": {\n      \"command\": \"/etc/sensu/plugins/default.sh\",\n      \"subscribers\": [\n        \"test\"\n      ],\n      \"interval\": 1,\n      \"handlers\": [\n        \"default\"\n      ],\n      \"aggregate\": true\n    }\n  }\n}" | tee /etc/sensu/conf.d/default_check.json && \
     echo "#!/bin/sh\n\necho \"Default WARNING\"\nexit 1" | tee /etc/sensu/plugins/default.sh && \
     chmod +x /etc/sensu/plugins/default.sh && \
     sudo chown -R sensu:sensu /etc/sensu

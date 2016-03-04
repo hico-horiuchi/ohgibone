@@ -11,6 +11,7 @@ type CheckStruct struct {
 	Subscribers []string `json:"subscribers"`
 	Interval    int      `json:"interval"`
 	Handlers    []string `json:"handlers"`
+	Aggregate   bool     `json:"aggregate"`
 	Issued      int64    `json:"issued"`
 	Executed    int64    `json:"executed"`
 	Output      string   `json:"output"`
