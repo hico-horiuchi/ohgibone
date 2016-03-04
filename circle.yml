@@ -1,0 +1,24 @@
+---
+machine:
+  timezone:
+    Asia/Tokyo
+  services:
+    - docker
+  environment:
+    tag: v0.22.0
+dependencies:
+  cache_directories:
+    - '~/docker'
+  pre:
+    - if [ -e ~/docker/hico/sensu:${tag}.tar ]; then docker load --input ~/docker/hico/sensu:${tag}.tar; fi
+    - docker build -t hico/sensu:${tag} .
+    - mkdir -p ~/docker/hico
+    - docker save hico/sensu:${tag} > ~/docker/hico/sensu:${tag}.tar
+  override:
+    - go get github.com/mattn/gom
+    - gom -test install
+test:
+  override:
+    - docker run -d -p 4567:4567 hico/sensu:${tag}
+    - sleep 20
+    - gom test ./...

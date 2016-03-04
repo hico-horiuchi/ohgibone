@@ -1,4 +1,6 @@
-## ohgibone v0.22.0 [![GoDoc](https://godoc.org/github.com/hico-horiuchi/ohgibone/sensu?status.svg)](https://godoc.org/github.com/hico-horiuchi/ohgibone/sensu)
+## ohgibone v0.22.0
+
+[![GoDoc](https://godoc.org/github.com/hico-horiuchi/ohgibone/sensu?status.svg)](https://godoc.org/github.com/hico-horiuchi/ohgibone/sensu) [![Circle CI](https://circleci.com/gh/hico-horiuchi/ohgibone.svg?style=shield)](https://circleci.com/gh/hico-horiuchi/ohgibone)
 
 #### Requirements
 

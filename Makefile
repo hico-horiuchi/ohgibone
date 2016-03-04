@@ -1,8 +1,12 @@
+gom:
+	go get github.com/mattn/gom
+	gom install
+
 fmt:
-	go fmt ./...
+	gom exec goimports -w sensu/*.go
 
 test:
-	go test ./...
+	gom test ./...
 
 link:
 	mkdir -p $(GOPATH)/src/github.com/hico-horiuchi
