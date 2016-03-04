@@ -57,23 +57,13 @@ func TestDo(t *testing.T) {
 
 func TestNewRequest(t *testing.T) {
 	assert := assert.New(t)
-	payload := strings.NewReader("/test")
+	DefaultAPI.User = "admin"
+	DefaultAPI.Password = "secret"
 
 	request, err := DefaultAPI.newRequest("GET", "/test", nil)
 	assert.Nil(err)
 	assert.Equal(request.Method, "GET")
 	assert.Equal(request.Host, "localhost:4567")
 	assert.Equal(request.URL.String(), "http://localhost:4567/test")
-
-	request, err = DefaultAPI.newRequest("POST", "/test", payload)
-	assert.Nil(err)
-	assert.Equal(request.Method, "POST")
-	assert.Equal(request.Host, "localhost:4567")
-	assert.Equal(request.URL.String(), "http://localhost:4567/test")
-
-	request, err = DefaultAPI.newRequest("DELETE", "/test", nil)
-	assert.Nil(err)
-	assert.Equal(request.Method, "DELETE")
-	assert.Equal(request.Host, "localhost:4567")
-	assert.Equal(request.URL.String(), "http://localhost:4567/test")
+	assert.Equal(request.Header["Authorization"][0], "Basic YWRtaW46c2VjcmV0")
 }
