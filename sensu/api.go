@@ -21,24 +21,24 @@ type API struct {
 	Password string
 }
 
-type apiResponse struct {
+type Response struct {
 	Body       string
 	StatusCode int
 }
 
-func (api API) get(namespace string) (*apiResponse, error) {
+func (api API) get(namespace string) (*Response, error) {
 	return api.do("GET", namespace, nil)
 }
 
-func (api API) post(namespace string, payload io.Reader) (*apiResponse, error) {
+func (api API) post(namespace string, payload io.Reader) (*Response, error) {
 	return api.do("POST", namespace, payload)
 }
 
-func (api API) delete(namespace string) (*apiResponse, error) {
+func (api API) delete(namespace string) (*Response, error) {
 	return api.do("DELETE", namespace, nil)
 }
 
-func (api API) do(method string, namespace string, payload io.Reader) (*apiResponse, error) {
+func (api API) do(method string, namespace string, payload io.Reader) (*Response, error) {
 	request, err := api.newRequest(method, namespace, payload)
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (api API) do(method string, namespace string, payload io.Reader) (*apiRespo
 		return nil, err
 	}
 
-	return &apiResponse{
+	return &Response{
 		Body:       string(body),
 		StatusCode: response.StatusCode,
 	}, nil

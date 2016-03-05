@@ -26,20 +26,20 @@ type InfoStruct struct {
 }
 
 // Returns information on the API.
-func (api API) GetInfo() (InfoStruct, error) {
+func (api API) GetInfo() (*InfoStruct, error) {
 	var info InfoStruct
 
 	response, err := api.get("/info")
 	if err != nil {
-		return info, err
+		return &info, err
 	} else if response.StatusCode != 200 {
-		return info, errors.New("sensu: " + statusCodeToString(response.StatusCode))
+		return &info, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &info)
 	if err != nil {
-		return info, err
+		return &info, err
 	}
 
-	return info, nil
+	return &info, nil
 }

@@ -39,22 +39,22 @@ func (api API) GetClients(limit int, offset int) ([]ClientStruct, error) {
 }
 
 // Returns a client.
-func (api API) GetClientsClient(name string) (ClientStruct, error) {
+func (api API) GetClientsClient(name string) (*ClientStruct, error) {
 	var client ClientStruct
 
 	response, err := api.get("/clients/" + name)
 	if err != nil {
-		return client, err
+		return &client, err
 	} else if response.StatusCode != 200 {
-		return client, errors.New("sensu: " + statusCodeToString(response.StatusCode))
+		return &client, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &client)
 	if err != nil {
-		return client, err
+		return &client, err
 	}
 
-	return client, nil
+	return &client, nil
 }
 
 // Create or update client data (e.g. Sensu JIT clients).

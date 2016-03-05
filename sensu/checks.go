@@ -40,20 +40,20 @@ func (api API) GetChecks() ([]CheckStruct, error) {
 }
 
 // Returns a check.
-func (api API) GetChecksCheck(name string) (CheckStruct, error) {
+func (api API) GetChecksCheck(name string) (*CheckStruct, error) {
 	var check CheckStruct
 
 	response, err := api.get("/checks/" + name)
 	if err != nil {
-		return check, err
+		return &check, err
 	} else if response.StatusCode != 200 {
-		return check, errors.New("sensu: " + statusCodeToString(response.StatusCode))
+		return &check, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &check)
 	if err != nil {
-		return check, err
+		return &check, err
 	}
 
-	return check, nil
+	return &check, nil
 }

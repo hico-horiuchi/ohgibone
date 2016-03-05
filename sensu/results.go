@@ -49,20 +49,20 @@ func (api API) GetResultsClient(client string) ([]ResultStruct, error) {
 }
 
 // Returns a check result for a given client & check name.
-func (api API) GetResultsClientCheck(client string, check string) (ResultStruct, error) {
+func (api API) GetResultsClientCheck(client string, check string) (*ResultStruct, error) {
 	var result ResultStruct
 
 	response, err := api.get("/result/" + client + "/" + check)
 	if err != nil {
-		return result, err
+		return &result, err
 	} else if response.StatusCode != 200 {
-		return result, errors.New("sensu: " + statusCodeToString(response.StatusCode))
+		return &result, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &result)
 	if err != nil {
-		return result, err
+		return &result, err
 	}
 
-	return result, nil
+	return &result, nil
 }

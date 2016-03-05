@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-type AggregateList struct {
+type IssueStruct struct {
 	Check  string  `json:"check"`
 	Issued []int64 `json:"issued"`
 }
@@ -30,22 +30,22 @@ type AggregateStruct struct {
 //   limit:  The number of aggregates to return.
 //   offset: The number of aggregates to offset before returning items.
 //
-func (api API) GetAggregates(limit int, offset int) ([]AggregateList, error) {
-	var aggregates []AggregateList
+func (api API) GetAggregates(limit int, offset int) ([]IssueStruct, error) {
+	var issues []IssueStruct
 
 	response, err := api.get(fmt.Sprintf("/aggregates?limit=%d&offset=%d", limit, offset))
 	if err != nil {
-		return aggregates, err
+		return issues, err
 	} else if response.StatusCode != 200 {
-		return aggregates, errors.New("sensu: " + statusCodeToString(response.StatusCode))
+		return issues, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
-	err = json.Unmarshal([]byte(response.Body), &aggregates)
+	err = json.Unmarshal([]byte(response.Body), &issues)
 	if err != nil {
-		return aggregates, err
+		return issues, err
 	}
 
-	return aggregates, nil
+	return issues, nil
 }
 
 // Returns the list of aggregates for a given check.
@@ -87,20 +87,20 @@ func (api API) DeleteAggregatesCheck(check string) error {
 //   summarize: Summarizes the output field in the event data. (summarize=output)
 //   result:    Return the raw result data.
 //
-func (api API) GetAggregatesCheckIssued(check string, issued int64, summarize string, results bool) (AggregateStruct, error) {
+func (api API) GetAggregatesCheckIssued(check string, issued int64, summarize string, results bool) (*AggregateStruct, error) {
 	var aggregate AggregateStruct
 
 	response, err := api.get(fmt.Sprintf("/aggregates/%s/%d?summarize=%s&results=%t", check, issued, summarize, results))
 	if err != nil {
-		return aggregate, err
+		return &aggregate, err
 	} else if response.StatusCode != 200 {
-		return aggregate, errors.New("sensu: " + statusCodeToString(response.StatusCode))
+		return &aggregate, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &aggregate)
 	if err != nil {
-		return aggregate, err
+		return &aggregate, err
 	}
 
-	return aggregate, nil
+	return &aggregate, nil
 }

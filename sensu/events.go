@@ -52,22 +52,22 @@ func (api API) GetEventsClient(client string) ([]EventStruct, error) {
 }
 
 // Returns an event for a given client & check name.
-func (api API) GetEventsClientCheck(client string, check string) (EventStruct, error) {
+func (api API) GetEventsClientCheck(client string, check string) (*EventStruct, error) {
 	var event EventStruct
 
 	response, err := api.get("/event/" + client + "/" + check)
 	if err != nil {
-		return event, err
+		return &event, err
 	} else if response.StatusCode != 200 {
-		return event, errors.New("sensu: " + statusCodeToString(response.StatusCode))
+		return &event, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &event)
 	if err != nil {
-		return event, err
+		return &event, err
 	}
 
-	return event, nil
+	return &event, nil
 }
 
 // Resolves an event for a given check on a given client.
