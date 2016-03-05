@@ -11,7 +11,7 @@ func TestGetInfo(t *testing.T) {
 
 	info, err := DefaultAPI.GetInfo()
 	assert.Nil(err)
-	assert.Equal(info.Sensu.Version, "0.22.0")
+	assert.Equal(info.Sensu.Version, "0.22.1")
 	assert.Equal(info.Transport.Keepalives.Messages, 0)
 	assert.Equal(info.Transport.Keepalives.Consumers, 1)
 	assert.Equal(info.Transport.Results.Messages, 0)

@@ -5,7 +5,7 @@ machine:
   services:
     - docker
   environment:
-    version: v0.22.0
+    version: v0.22.1
 dependencies:
   cache_directories:
     - '~/docker'

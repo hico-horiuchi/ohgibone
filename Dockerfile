@@ -2,7 +2,7 @@ FROM ubuntu:14.04
 
 MAINTAINER hico-horiuchi <12ff5b8@gmail.com>
 
-ENV VERSION 0.22.0-1
+ENV VERSION 0.22.1-1
 
 RUN sed -i "s/archive\.ubuntu\.com/ftp\.jaist\.ac\.jp/g" /etc/apt/sources.list && \
     apt-get update && \

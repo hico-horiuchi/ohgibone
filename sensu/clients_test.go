@@ -17,7 +17,7 @@ func TestGetClients(t *testing.T) {
 	assert.Equal(clients[0].Address, "localhost")
 	assert.Equal(clients[0].Subscriptions, []string{"test"})
 	assert.NotEqual(clients[0].Timestamp, 0)
-	assert.Equal(clients[0].Version, "0.22.0")
+	assert.Equal(clients[0].Version, "0.22.1")
 }
 
 func TestGetClientsClient(t *testing.T) {
@@ -29,7 +29,7 @@ func TestGetClientsClient(t *testing.T) {
 	assert.Equal(client.Address, "localhost")
 	assert.Equal(client.Subscriptions, []string{"test"})
 	assert.NotEqual(client.Timestamp, 0)
-	assert.Equal(client.Version, "0.22.0")
+	assert.Equal(client.Version, "0.22.1")
 
 	_, err = DefaultAPI.GetClientsClient("custom")
 	assert.Equal(err.Error(), "sensu: Not Found")
@@ -47,7 +47,7 @@ func TestPostClients(t *testing.T) {
 	assert.Equal(client.Address, "192.168.0.1")
 	assert.Equal(client.Subscriptions, []string{"network"})
 	assert.NotEqual(client.Timestamp, 0)
-	assert.Equal(client.Version, "0.22.0")
+	assert.Equal(client.Version, "0.22.1")
 }
 
 func TestDeleteClientsClient(t *testing.T) {
