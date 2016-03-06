@@ -3,6 +3,7 @@ package sensu
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
 )
 
 type historyStruct struct {
@@ -19,7 +20,7 @@ func (api API) GetClientsHistory(client string) ([]historyStruct, error) {
 	response, err := api.get("/clients/" + client + "/history")
 	if err != nil {
 		return histories, err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return histories, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 

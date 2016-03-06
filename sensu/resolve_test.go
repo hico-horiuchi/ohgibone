@@ -1,6 +1,7 @@
 package sensu
 
 import (
+	"net/http"
 	"testing"
 	"time"
 
@@ -15,6 +16,14 @@ func TestPostResolve(t *testing.T) {
 
 	err = DefaultAPI.PostResolve("test", "custom")
 	assert.Equal(err.Error(), "sensu: Not Found")
+
+	err = testAPI.PostResolve("test", "default")
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	err = api.PostResolve("test", "default")
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
 
 	time.Sleep(1 * time.Second)
 }

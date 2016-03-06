@@ -1,6 +1,7 @@
 package sensu
 
 import (
+	"net/http"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -21,6 +22,19 @@ func TestGetStashes(t *testing.T) {
 
 	err := DefaultAPI.GetStashes(&stashes, -1, -1)
 	assert.Nil(err)
+
+	err = testAPI.GetStashes(&stashes, -1, -1)
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	err = api.GetStashes(&stashes, -1, -1)
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
+
+	server, api = testServerAndAPI(http.StatusOK, "")
+	defer server.Close()
+	err = api.GetStashes(&stashes, -1, -1)
+	assert.Equal(err.Error(), "unexpected end of JSON input")
 }
 
 func TestPostStashes(t *testing.T) {
@@ -35,8 +49,16 @@ func TestPostStashes(t *testing.T) {
 		},
 	}
 
-	err := DefaultAPI.PostStashes(stash)
+	err := DefaultAPI.PostStashes(&stash)
 	assert.Nil(err)
+
+	err = testAPI.PostStashes(&stash)
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	err = api.PostStashes(&stash)
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
 }
 
 func TestPostStashesPath(t *testing.T) {
@@ -45,8 +67,16 @@ func TestPostStashesPath(t *testing.T) {
 		Message: "example",
 	}
 
-	err := DefaultAPI.PostStashesPath("example/stash", content)
+	err := DefaultAPI.PostStashesPath("example/stash", &content)
 	assert.Nil(err)
+
+	err = testAPI.PostStashesPath("example/stash", &content)
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	err = api.PostStashesPath("example/stash", &content)
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
 }
 
 func TestGetStashesPath(t *testing.T) {
@@ -59,6 +89,19 @@ func TestGetStashesPath(t *testing.T) {
 
 	err = DefaultAPI.GetStashesPath("test/stash", &content)
 	assert.Equal(err.Error(), "sensu: Not Found")
+
+	err = testAPI.GetStashesPath("example/stash", &content)
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	err = api.GetStashesPath("example/stash", &content)
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
+
+	server, api = testServerAndAPI(http.StatusOK, "")
+	defer server.Close()
+	err = api.GetStashesPath("example/stash", &content)
+	assert.Equal(err.Error(), "unexpected end of JSON input")
 }
 
 func TestDeleteStashesPath(t *testing.T) {
@@ -69,4 +112,12 @@ func TestDeleteStashesPath(t *testing.T) {
 
 	err = DefaultAPI.DeleteStashesPath("test/stash")
 	assert.Equal(err.Error(), "sensu: Not Found")
+
+	err = testAPI.DeleteStashesPath("example/stash")
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	err = api.DeleteStashesPath("example/stash")
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
 }

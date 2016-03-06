@@ -3,6 +3,7 @@ package sensu
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
 )
 
 type InfoStruct struct {
@@ -32,7 +33,7 @@ func (api API) GetInfo() (*InfoStruct, error) {
 	response, err := api.get("/info")
 	if err != nil {
 		return &info, err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return &info, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 

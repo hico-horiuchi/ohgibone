@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
 	"strings"
 )
 
@@ -26,7 +27,7 @@ func (api API) GetClients(limit int, offset int) ([]ClientStruct, error) {
 	response, err := api.get(fmt.Sprintf("/clients?limit=%d&offset=%d", limit, offset))
 	if err != nil {
 		return clients, err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return clients, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
@@ -45,7 +46,7 @@ func (api API) GetClientsClient(name string) (*ClientStruct, error) {
 	response, err := api.get("/clients/" + name)
 	if err != nil {
 		return &client, err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return &client, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
@@ -74,7 +75,7 @@ func (api API) PostClients(name string, address string, subscriptions []string) 
 	response, err := api.post("/clients", payload)
 	if err != nil {
 		return err
-	} else if response.StatusCode != 201 {
+	} else if response.StatusCode != http.StatusCreated {
 		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
@@ -86,7 +87,7 @@ func (api API) DeleteClientsClient(name string) error {
 	response, err := api.delete("/clients/" + name)
 	if err != nil {
 		return err
-	} else if response.StatusCode != 202 {
+	} else if response.StatusCode != http.StatusAccepted {
 		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 

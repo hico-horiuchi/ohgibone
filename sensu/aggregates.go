@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
 )
 
 type IssueStruct struct {
@@ -36,7 +37,7 @@ func (api API) GetAggregates(limit int, offset int) ([]IssueStruct, error) {
 	response, err := api.get(fmt.Sprintf("/aggregates?limit=%d&offset=%d", limit, offset))
 	if err != nil {
 		return issues, err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return issues, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
@@ -58,7 +59,7 @@ func (api API) GetAggregatesCheck(check string, age int) ([]int64, error) {
 	response, err := api.get(fmt.Sprintf("/aggregates/%s?age=%d", check, age))
 	if err != nil {
 		return issues, err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return issues, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
@@ -75,7 +76,7 @@ func (api API) DeleteAggregatesCheck(check string) error {
 	response, err := api.delete("/aggregates/" + check)
 	if err != nil {
 		return err
-	} else if response.StatusCode != 204 {
+	} else if response.StatusCode != http.StatusNoContent {
 		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
@@ -93,7 +94,7 @@ func (api API) GetAggregatesCheckIssued(check string, issued int64, summarize st
 	response, err := api.get(fmt.Sprintf("/aggregates/%s/%d?summarize=%s&results=%t", check, issued, summarize, results))
 	if err != nil {
 		return &aggregate, err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return &aggregate, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 

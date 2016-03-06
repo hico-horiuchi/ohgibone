@@ -37,22 +37,14 @@ func TestDelete(t *testing.T) {
 
 func TestDo(t *testing.T) {
 	assert := assert.New(t)
-	payload := strings.NewReader("/test")
 
 	response, err := DefaultAPI.do("GET", "/test", nil)
 	assert.Nil(err)
 	assert.Equal(response.Body, "")
 	assert.Equal(response.StatusCode, 404)
 
-	response, err = DefaultAPI.do("POST", "/test", payload)
-	assert.Nil(err)
-	assert.Equal(response.Body, "")
-	assert.Equal(response.StatusCode, 404)
-
-	response, err = DefaultAPI.do("DELETE", "/test", nil)
-	assert.Nil(err)
-	assert.Equal(response.Body, "")
-	assert.Equal(response.StatusCode, 404)
+	_, err = testAPI.do("GET", "/test", nil)
+	assert.Contains(err.Error(), "getsockopt: connection refused")
 }
 
 func TestNewRequest(t *testing.T) {

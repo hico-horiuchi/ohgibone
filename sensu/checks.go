@@ -3,6 +3,7 @@ package sensu
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
 )
 
 type CheckStruct struct {
@@ -27,7 +28,7 @@ func (api API) GetChecks() ([]CheckStruct, error) {
 	response, err := api.get("/checks")
 	if err != nil {
 		return checks, err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return checks, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
@@ -46,7 +47,7 @@ func (api API) GetChecksCheck(name string) (*CheckStruct, error) {
 	response, err := api.get("/checks/" + name)
 	if err != nil {
 		return &check, err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return &check, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 

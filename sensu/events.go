@@ -3,6 +3,7 @@ package sensu
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
 )
 
 type EventStruct struct {
@@ -20,7 +21,7 @@ func (api API) GetEvents() ([]EventStruct, error) {
 	response, err := api.get("/events")
 	if err != nil {
 		return events, err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return events, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
@@ -39,7 +40,7 @@ func (api API) GetEventsClient(client string) ([]EventStruct, error) {
 	response, err := api.get("/events/" + client)
 	if err != nil {
 		return events, err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return events, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
@@ -58,7 +59,7 @@ func (api API) GetEventsClientCheck(client string, check string) (*EventStruct, 
 	response, err := api.get("/event/" + client + "/" + check)
 	if err != nil {
 		return &event, err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return &event, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
@@ -75,7 +76,7 @@ func (api API) DeleteEventsClientCheck(client string, check string) error {
 	response, err := api.delete("/event/" + client + "/" + check)
 	if err != nil {
 		return err
-	} else if response.StatusCode != 202 {
+	} else if response.StatusCode != http.StatusAccepted {
 		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 

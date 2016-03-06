@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
 	"strings"
 )
 
@@ -21,7 +22,7 @@ func (api API) GetStashes(stashes interface{}, limit int, offset int) error {
 	response, err := api.get(fmt.Sprintf("/stashes?limit=%d&offset=%d", limit, offset))
 	if err != nil {
 		return err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
@@ -44,7 +45,7 @@ func (api API) PostStashes(stash interface{}) error {
 	response, err := api.post("/stashes", payload)
 	if err != nil {
 		return err
-	} else if response.StatusCode != 201 {
+	} else if response.StatusCode != http.StatusCreated {
 		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
@@ -62,7 +63,7 @@ func (api API) PostStashesPath(path string, content interface{}) error {
 	response, err := api.post("/stashes/"+path, payload)
 	if err != nil {
 		return err
-	} else if response.StatusCode != 201 {
+	} else if response.StatusCode != http.StatusCreated {
 		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
@@ -74,7 +75,7 @@ func (api API) GetStashesPath(path string, content interface{}) error {
 	response, err := api.get("/stashes/" + path)
 	if err != nil {
 		return err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
@@ -91,7 +92,7 @@ func (api API) DeleteStashesPath(path string) error {
 	response, err := api.delete("/stashes/" + path)
 	if err != nil {
 		return err
-	} else if response.StatusCode != 204 {
+	} else if response.StatusCode != http.StatusNoContent {
 		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 

@@ -1,6 +1,7 @@
 package sensu
 
 import (
+	"net/http"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -14,6 +15,19 @@ func TestGetAggregates(t *testing.T) {
 	assert.Len(aggregates, 1)
 	assert.Equal(aggregates[0].Check, "default")
 	assert.NotEqual(len(aggregates[0].Issued), 0)
+
+	_, err = testAPI.GetAggregates(-1, -1)
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	_, err = api.GetAggregates(-1, -1)
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
+
+	server, api = testServerAndAPI(http.StatusOK, "")
+	defer server.Close()
+	_, err = api.GetAggregates(-1, -1)
+	assert.Equal(err.Error(), "unexpected end of JSON input")
 }
 
 func TestGetAggregatesCheck(t *testing.T) {
@@ -26,6 +40,19 @@ func TestGetAggregatesCheck(t *testing.T) {
 	issues, err = DefaultAPI.GetAggregatesCheck("custom", -1)
 	assert.Empty(issues)
 	assert.Equal(err.Error(), "sensu: Not Found")
+
+	_, err = testAPI.GetAggregatesCheck("default", -1)
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	_, err = api.GetAggregatesCheck("default", -1)
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
+
+	server, api = testServerAndAPI(http.StatusOK, "")
+	defer server.Close()
+	_, err = api.GetAggregatesCheck("default", -1)
+	assert.Equal(err.Error(), "unexpected end of JSON input")
 }
 
 func TestGetAggregatesCheckIssued(t *testing.T) {
@@ -46,6 +73,19 @@ func TestGetAggregatesCheckIssued(t *testing.T) {
 
 	_, err = DefaultAPI.GetAggregatesCheckIssued("default", 0, "", false)
 	assert.Equal(err.Error(), "sensu: Not Found")
+
+	_, err = testAPI.GetAggregatesCheckIssued("default", 0, "", false)
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	_, err = api.GetAggregatesCheckIssued("default", 0, "", false)
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
+
+	server, api = testServerAndAPI(http.StatusOK, "")
+	defer server.Close()
+	_, err = api.GetAggregatesCheckIssued("default", 0, "", false)
+	assert.Equal(err.Error(), "unexpected end of JSON input")
 }
 
 func TestDeleteAggregatesCheck(t *testing.T) {
@@ -56,4 +96,12 @@ func TestDeleteAggregatesCheck(t *testing.T) {
 
 	err = DefaultAPI.DeleteAggregatesCheck("custom")
 	assert.Equal(err.Error(), "sensu: Not Found")
+
+	err = testAPI.DeleteAggregatesCheck("default")
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	err = api.DeleteAggregatesCheck("default")
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
 }

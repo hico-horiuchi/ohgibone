@@ -3,6 +3,7 @@ package sensu
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
 	"strings"
 )
 
@@ -27,7 +28,7 @@ func (api API) PostRequest(check string, subscribers []string) error {
 	response, err := api.post("/request", payload)
 	if err != nil {
 		return err
-	} else if response.StatusCode != 202 {
+	} else if response.StatusCode != http.StatusAccepted {
 		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 

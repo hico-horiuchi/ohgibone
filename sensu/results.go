@@ -3,6 +3,7 @@ package sensu
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
 )
 
 type ResultStruct struct {
@@ -17,7 +18,7 @@ func (api API) GetResults() ([]ResultStruct, error) {
 	response, err := api.get("/results")
 	if err != nil {
 		return results, err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return results, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
@@ -36,7 +37,7 @@ func (api API) GetResultsClient(client string) ([]ResultStruct, error) {
 	response, err := api.get("/results/" + client)
 	if err != nil {
 		return results, err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return results, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
@@ -55,7 +56,7 @@ func (api API) GetResultsClientCheck(client string, check string) (*ResultStruct
 	response, err := api.get("/result/" + client + "/" + check)
 	if err != nil {
 		return &result, err
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode != http.StatusOK {
 		return &result, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 

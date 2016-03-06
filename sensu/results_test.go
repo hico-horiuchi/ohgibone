@@ -1,6 +1,7 @@
 package sensu
 
 import (
+	"net/http"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -30,6 +31,19 @@ func TestGetResults(t *testing.T) {
 		assert.Equal(result.Check.Status, 1)
 		assert.NotEqual(result.Check.Duration, 0.0)
 	}
+
+	_, err = testAPI.GetResults()
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	_, err = api.GetResults()
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
+
+	server, api = testServerAndAPI(http.StatusOK, "")
+	defer server.Close()
+	_, err = api.GetResults()
+	assert.Equal(err.Error(), "unexpected end of JSON input")
 }
 
 func TestGetResultsClient(t *testing.T) {
@@ -60,6 +74,19 @@ func TestGetResultsClient(t *testing.T) {
 	results, err = DefaultAPI.GetResultsClient("production")
 	assert.Equal(err.Error(), "sensu: Not Found")
 	assert.Len(results, 0)
+
+	_, err = testAPI.GetResultsClient("test")
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	_, err = api.GetResultsClient("test")
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
+
+	server, api = testServerAndAPI(http.StatusOK, "")
+	defer server.Close()
+	_, err = api.GetResultsClient("test")
+	assert.Equal(err.Error(), "unexpected end of JSON input")
 }
 
 func TestGetResultsClientCheck(t *testing.T) {
@@ -82,4 +109,17 @@ func TestGetResultsClientCheck(t *testing.T) {
 
 	_, err = DefaultAPI.GetResultsClientCheck("test", "custom")
 	assert.Equal(err.Error(), "sensu: Not Found")
+
+	_, err = testAPI.GetResultsClientCheck("test", "default")
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	_, err = api.GetResultsClientCheck("test", "default")
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
+
+	server, api = testServerAndAPI(http.StatusOK, "")
+	defer server.Close()
+	_, err = api.GetResultsClientCheck("test", "default")
+	assert.Equal(err.Error(), "unexpected end of JSON input")
 }

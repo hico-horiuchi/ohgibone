@@ -1,6 +1,7 @@
 package sensu
 
 import (
+	"net/http"
 	"testing"
 	"time"
 
@@ -34,6 +35,19 @@ func TestGetEvents(t *testing.T) {
 	assert.Equal(events[0].Check.History[0], "1")
 	assert.NotEqual(events[0].Occurrences, 0)
 	assert.Equal(events[0].Action, "create")
+
+	_, err = testAPI.GetEvents()
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	_, err = api.GetEvents()
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
+
+	server, api = testServerAndAPI(http.StatusOK, "")
+	defer server.Close()
+	_, err = api.GetEvents()
+	assert.Equal(err.Error(), "unexpected end of JSON input")
 }
 
 func TestGetEventsClient(t *testing.T) {
@@ -67,6 +81,19 @@ func TestGetEventsClient(t *testing.T) {
 	events, err = DefaultAPI.GetEventsClient("production")
 	assert.Nil(err)
 	assert.Empty(events)
+
+	_, err = testAPI.GetEventsClient("test")
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	_, err = api.GetEventsClient("test")
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
+
+	server, api = testServerAndAPI(http.StatusOK, "")
+	defer server.Close()
+	_, err = api.GetEventsClient("test")
+	assert.Equal(err.Error(), "unexpected end of JSON input")
 }
 
 func TestGetEventsClientCheck(t *testing.T) {
@@ -98,6 +125,19 @@ func TestGetEventsClientCheck(t *testing.T) {
 
 	_, err = DefaultAPI.GetEventsClientCheck("test", "custom")
 	assert.Equal(err.Error(), "sensu: Not Found")
+
+	_, err = testAPI.GetEventsClientCheck("test", "default")
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	_, err = api.GetEventsClientCheck("test", "default")
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
+
+	server, api = testServerAndAPI(http.StatusOK, "")
+	defer server.Close()
+	_, err = api.GetEventsClientCheck("test", "default")
+	assert.Equal(err.Error(), "unexpected end of JSON input")
 }
 
 func TestDeleteEventsClientCheck(t *testing.T) {
@@ -108,6 +148,14 @@ func TestDeleteEventsClientCheck(t *testing.T) {
 
 	err = DefaultAPI.DeleteEventsClientCheck("test", "custom")
 	assert.Equal(err.Error(), "sensu: Not Found")
+
+	err = testAPI.DeleteEventsClientCheck("test", "default")
+	assert.Contains(err.Error(), "getsockopt: connection refused")
+
+	server, api := testServerAndAPI(http.StatusInternalServerError, "")
+	defer server.Close()
+	err = api.DeleteEventsClientCheck("test", "default")
+	assert.Equal(err.Error(), "sensu: Internal Server Error")
 
 	time.Sleep(1 * time.Second)
 }

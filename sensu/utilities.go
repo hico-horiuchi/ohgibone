@@ -1,24 +1,26 @@
 package sensu
 
+import "net/http"
+
 func statusCodeToString(status int) string {
 	var str string
 
 	switch status {
-	case 200:
+	case http.StatusOK:
 		str = "OK"
-	case 201:
+	case http.StatusCreated:
 		str = "Created"
-	case 202:
+	case http.StatusAccepted:
 		str = "Accepted"
-	case 204:
+	case http.StatusNoContent:
 		str = "No Content"
-	case 400:
+	case http.StatusBadRequest:
 		str = "Bad Request"
-	case 404:
+	case http.StatusNotFound:
 		str = "Not Found"
-	case 500:
+	case http.StatusInternalServerError:
 		str = "Internal Server Error"
-	case 503:
+	case http.StatusServiceUnavailable:
 		str = "Service Unavailable"
 	}
 
