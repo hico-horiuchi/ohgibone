@@ -3,5 +3,6 @@ group :development do
 end
 
 group :test do
+  gom 'github.com/mattn/goveralls'
   gom 'github.com/stretchr/testify/assert'
 end

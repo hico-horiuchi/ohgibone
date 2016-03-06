@@ -1,6 +1,6 @@
 ## ohgibone v0.22.1
 
-[![GoDoc](https://godoc.org/github.com/hico-horiuchi/ohgibone/sensu?status.svg)](https://godoc.org/github.com/hico-horiuchi/ohgibone/sensu) [![Circle CI](https://circleci.com/gh/hico-horiuchi/ohgibone.svg?style=shield)](https://circleci.com/gh/hico-horiuchi/ohgibone) ![Coverage](https://img.shields.io/badge/coverage-76.8%25-lightgray.svg)
+[![GoDoc](https://godoc.org/github.com/hico-horiuchi/ohgibone/sensu?status.svg)](https://godoc.org/github.com/hico-horiuchi/ohgibone/sensu) [![Circle CI](https://circleci.com/gh/hico-horiuchi/ohgibone.svg?style=shield)](https://circleci.com/gh/hico-horiuchi/ohgibone) [![Coverage Status](https://coveralls.io/repos/github/hico-horiuchi/ohgibone/badge.svg)](https://coveralls.io/github/hico-horiuchi/ohgibone)
 
 #### Requirements
 

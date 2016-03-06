@@ -15,10 +15,15 @@ dependencies:
     - mkdir -p ~/docker/hico
     - docker save hico/sensu:${version} > ~/docker/hico/sensu:${version}.tar
   override:
-    - go get github.com/mattn/gom
-    - gom -test install
+    - make gom
 test:
+  pre:
+    - mkdir -p /home/ubuntu/.go_workspace/src/github.com/hico-horiuchi
+    - if [ ! -d /home/ubuntu/.go_workspace/src/github.com/hico-horiuchi/ohgibone ]; then ln -s $(pwd) /home/ubuntu/.go_workspace/src/github.com/hico-horiuchi/ohgibone; fi
   override:
     - docker run -d -p 4567:4567 hico/sensu:${version}
     - sleep 20
-    - gom test ./...
+    - gom test -v -cover -race -coverprofile=coverage.out ./...
+  post:
+    - sed -i 's/_\/home\/ubuntu/github\.com\/hico-horiuchi/g' coverage.out
+    - gom exec goveralls -coverprofile=coverage.out -service=circle-ci -repotoken=${COVERALLS_TOKEN}
