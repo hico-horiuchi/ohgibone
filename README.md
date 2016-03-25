@@ -1,4 +1,4 @@
-## ohgibone v0.22.1
+## <img src="https://raw.githubusercontent.com/hico-horiuchi/ohgibone/master/logo.png" alt="logo.png" width="60" height="29"> ohgibone v0.22.1
 
 [![GoDoc](https://godoc.org/github.com/hico-horiuchi/ohgibone/sensu?status.svg)](https://godoc.org/github.com/hico-horiuchi/ohgibone/sensu) [![Circle CI](https://circleci.com/gh/hico-horiuchi/ohgibone.svg?style=shield)](https://circleci.com/gh/hico-horiuchi/ohgibone) [![Coverage Status](https://coveralls.io/repos/github/hico-horiuchi/ohgibone/badge.svg)](https://coveralls.io/github/hico-horiuchi/ohgibone)
 
