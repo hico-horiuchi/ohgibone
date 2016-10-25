@@ -23,7 +23,7 @@ test:
   override:
     - docker run -d -p 4567:4567 hico/sensu:${version}
     - sleep 20
-    - gom test -v -cover -race -coverprofile=coverage.out ./...
+    - gom test -v -cover -race -coverprofile=coverage.out github.com/hico-horiuchi/ohgibone/sensu
   post:
     - sed -i 's/_\/home\/ubuntu/github\.com\/hico-horiuchi/g' coverage.out
     - gom exec goveralls -coverprofile=coverage.out -service=circle-ci -repotoken=${COVERALLS_TOKEN}
